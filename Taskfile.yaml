@@ -1,0 +1,43 @@
+# https://taskfile.dev
+
+version: '3'
+
+env:
+  OUTPUT_FILE: userscript.user.js
+  TEMP_FOLDER: .temp
+  DIST_FOLDER: dist
+
+tasks:
+  build:
+    deps: [delete-temp]
+    cmds:
+      # Transpile TypeScript files into JavaScript
+      - echo 💬 Transpiling TypeScript files...
+      - tsc
+
+      # Bundle all file in one JavaScript file
+      - echo 📦 Bundling files...
+      - npx rollup $TEMP_FOLDER/main.js --file $TEMP_FOLDER/main.js --format iife
+
+      # Add meta to the userscript file
+      - echo 🗃️ Adding metadata to the userscript file...
+      - mkdir $DIST_FOLDER
+      - touch $DIST_FOLDER/$OUTPUT_FILE
+      - cat userscript.meta.js $TEMP_FOLDER/main.js > $DIST_FOLDER/$OUTPUT_FILE
+
+      # Delete temporary files
+      - echo 🧹 Cleaning temporary files...
+      - rm -fr $TEMP_FOLDER
+
+      # Format the final code
+      - echo ✨ Formatting the final code...
+      - npm run --silent format
+
+      - echo 🎉 The userscript has been built! 🎉
+      - echo
+      - echo 👉 Your userscript is ready at $DIST_FOLDER/$OUTPUT_FILE
+    silent: true
+
+  delete-temp:
+    cmds:
+      - rm -fr $TEMP_FOLDER $DIST_FOLDER
