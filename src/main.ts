@@ -120,7 +120,7 @@ class VisualRatingBar {
     barMask.style.marginTop = `-${height}px`
     barMask.style.right = '0'
     barMask.style.position = 'absolute'
-    barMask.style.filter = 'contrast(70%)'
+    barMask.style.filter = 'contrast(80%)'
     if (animation) barMask.style.transition = 'width 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940)'
     if (borderRadius) barMask.style.borderTopRightRadius = `${borderRadius}px`
     if (borderRadius) barMask.style.borderBottomRightRadius = `${borderRadius}px`
