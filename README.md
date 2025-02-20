@@ -7,7 +7,7 @@ A userscript adding a visual representation of the current album rating.
 ### Features
 * Settings menu (open it by clicking on the visual bar)
 * Multiple customization settings: 
-  * bar height and width
+  * bar height
   * multiple bar themes and blending modes (including a colorblind theme)
   * Enable/disable the inner shadow, border radius and the loading animation
 * Dark modes compatible: automatically diminishing color intensity when using the RYM dark modes
