@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RateYourMusic - Visual Rating Bar
 // @namespace    rym-visual-rating-bar
-// @version      0.4
+// @version      0.5
 // @description  Adds a visual rating bar on releases pages.
 // @author       ewauq
 // @updateURL    https://raw.githubusercontent.com/ewauq/userscripts/main/dist/rym-visual-rating-bar.user.js
@@ -38,12 +38,21 @@
 
   const localstorageClient$1 = new Localstorage(localStorage)
   class OptionsMenu {
+    constructor() {
+      this.getBackgroundColor = () => {
+        const elementNode = document.querySelector('.release_right_column')
+        if (!elementNode) throw new Error("Can't find the .release_right_column element")
+        return window.getComputedStyle(elementNode).backgroundColor
+      }
+    }
     show() {
-      const optionsMenuOverlayNode = document.getElementById('userscript-options-menu')
+      const overlayNode = document.getElementById('userscript-options-menu')
+      const containerNode = document.querySelector('#userscript-options-menu > div')
       const headerNode = document.getElementById('page_header')
       const pageWrapper = document.getElementById('content_wrapper_outer')
       document.body.style.overflow = 'hidden'
-      if (optionsMenuOverlayNode) optionsMenuOverlayNode.style.display = 'flex'
+      if (containerNode) containerNode.style.backgroundColor = this.getBackgroundColor()
+      if (overlayNode) overlayNode.style.display = 'flex'
       if (headerNode) headerNode.style.filter = 'blur(3px)'
       if (pageWrapper) pageWrapper.style.filter = 'blur(3px)'
     }
@@ -294,7 +303,7 @@
       const { animation, height, borderRadius, shadow } = this.barOptions
       const ratingText =
         ratingNode === null || ratingNode === void 0 ? void 0 : ratingNode.textContent
-      if (!ratingText) throw new Error("Can't retieve the rating text of element span.avg_rating")
+      if (!ratingText) throw new Error("Can't retrieve the rating text of element span.avg_rating")
       const rymThemeMode = this.getThemeMode()
       const rating = parseFloat(ratingText.trim())
       const ratingPercentage = (rating * 100) / 5
@@ -312,7 +321,7 @@
       barMask.style.marginTop = `-${height}px`
       barMask.style.right = '0'
       barMask.style.position = 'absolute'
-      barMask.style.filter = 'contrast(90%)'
+      barMask.style.filter = 'contrast(80%)'
       if (animation)
         barMask.style.transition = 'width 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940)'
       if (borderRadius) barMask.style.borderTopRightRadius = `${borderRadius}px`
@@ -334,11 +343,11 @@
         : ratingNodeParent.appendChild(barWrapper)
       barWrapper.appendChild(barGradient)
       barWrapper.appendChild(barMask)
-      const waitingBarVisiblility = window.setInterval(function () {
+      const visibilityCheckInterval = window.setInterval(function () {
         const barWrapperNode = document.getElementById('userscript-bar-wrapper')
         if (barWrapperNode) {
           barMask.style.width = `${100 - ratingPercentage}%`
-          window.clearInterval(waitingBarVisiblility)
+          window.clearInterval(visibilityCheckInterval)
         }
       }, 50)
       ;(_b = document.querySelectorAll('div.header_theme_button')[1]) === null || _b === void 0

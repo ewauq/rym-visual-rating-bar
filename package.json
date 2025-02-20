@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "lint": "eslint . --ext .ts,.js",
-    "format": "prettier --config .prettierrc {dist,src}/**/*.{js,ts} --write",
+    "format": "prettier --config .prettierrc '{dist,src}/**/*.{js,ts}' --write",
     "reset": "rm -fr .node_modules dist .temp package-lock.json && npm cache clean --force && npm install"
   },
   "dependencies": {

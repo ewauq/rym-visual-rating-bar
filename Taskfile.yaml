@@ -13,7 +13,7 @@ tasks:
     cmds:
       # Transpile TypeScript files into JavaScript
       - echo 💬 Transpiling TypeScript files...
-      - tsc
+      - npx tsc
 
       # Bundle all file in one JavaScript file
       - echo 📦 Bundling files...

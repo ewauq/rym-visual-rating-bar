@@ -1,17 +1,27 @@
 import { Themes } from './enum/theme'
 import { Localstorage } from './service/localstorage'
+import { RGBColor } from './type/color'
 import { OptionsElements } from './type/option'
 
 const localstorageClient = new Localstorage(localStorage)
 
 export class OptionsMenu {
+  getBackgroundColor = (): RGBColor => {
+    const elementNode: Element | null = document.querySelector('.release_right_column')
+    if (!elementNode) throw new Error("Can't find the .release_right_column element")
+    return window.getComputedStyle(elementNode).backgroundColor as RGBColor
+  }
+
   show() {
-    const optionsMenuOverlayNode = document.getElementById('userscript-options-menu')
+    const overlayNode = document.getElementById('userscript-options-menu')
+    const containerNode: HTMLElement | null = document.querySelector(
+      '#userscript-options-menu > div',
+    )
     const headerNode = document.getElementById('page_header')
     const pageWrapper = document.getElementById('content_wrapper_outer')
-
     document.body.style.overflow = 'hidden'
-    if (optionsMenuOverlayNode) optionsMenuOverlayNode.style.display = 'flex'
+    if (containerNode) containerNode.style.backgroundColor = this.getBackgroundColor()
+    if (overlayNode) overlayNode.style.display = 'flex'
     if (headerNode) headerNode.style.filter = 'blur(3px)'
     if (pageWrapper) pageWrapper.style.filter = 'blur(3px)'
   }

@@ -96,7 +96,7 @@ class VisualRatingBar {
 
     const ratingText = ratingNode?.textContent
 
-    if (!ratingText) throw new Error("Can't retieve the rating text of element span.avg_rating")
+    if (!ratingText) throw new Error("Can't retrieve the rating text of element span.avg_rating")
 
     const rymThemeMode = this.getThemeMode()
 
@@ -120,7 +120,7 @@ class VisualRatingBar {
     barMask.style.marginTop = `-${height}px`
     barMask.style.right = '0'
     barMask.style.position = 'absolute'
-    barMask.style.filter = 'contrast(90%)'
+    barMask.style.filter = 'contrast(80%)'
     if (animation) barMask.style.transition = 'width 500ms cubic-bezier(0.250, 0.460, 0.450, 0.940)'
     if (borderRadius) barMask.style.borderTopRightRadius = `${borderRadius}px`
     if (borderRadius) barMask.style.borderBottomRightRadius = `${borderRadius}px`
@@ -140,11 +140,11 @@ class VisualRatingBar {
     barWrapper.appendChild(barMask)
 
     // Bar animation
-    const waitingBarVisiblility = window.setInterval(function () {
+    const visibilityCheckInterval = window.setInterval(function () {
       const barWrapperNode = document.getElementById('userscript-bar-wrapper')
       if (barWrapperNode) {
         barMask.style.width = `${100 - ratingPercentage}%`
-        window.clearInterval(waitingBarVisiblility)
+        window.clearInterval(visibilityCheckInterval)
       }
     }, 50)
 
