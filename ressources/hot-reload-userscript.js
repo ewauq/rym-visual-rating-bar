@@ -7,22 +7,28 @@
 // @match        https://rateyourmusic.com/release/album/*/*/
 // @run-at       document-start
 // @grant        GM.xmlHttpRequest
+// @grant        GM.setValue
 // ==/UserScript==
 
 ;(async () => {
+  let lastLoadedCode = null
+
   setInterval(() => {
     GM.xmlHttpRequest({
       method: 'GET',
       url: `http://localhost:3000/script.user.js?cb=${Date.now()}`,
       onload: async (response) => {
-        const code = response.responseText
+        const newCode = response.responseText
 
-        try {
-          const blob = new Blob([code], { type: 'application/javascript' })
+        if (newCode !== lastLoadedCode) {
+          console.log('🔄 Script updated, reloading...')
+
+          lastLoadedCode = newCode
+          await GM.setValue('cached_script', newCode)
+          const blob = new Blob([newCode], { type: 'application/javascript' })
           const url = URL.createObjectURL(blob)
+          document.querySelectorAll('[userscript-node]').forEach((element) => element.remove())
           import(url).catch(console.error)
-        } catch (error) {
-          console.error('❌ Error in script:', error)
         }
       },
     })
