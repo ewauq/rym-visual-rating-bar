@@ -1,15 +1,13 @@
 import { RatingTextNode } from '@/node/rating-text'
-import { BarWrapperNode } from '@/node/bar-wrapper'
+import { BarContainerNode } from '@/node/bar-container'
 import { BarMaskNode } from '@/node/bar-mask'
-import { BarProgressionNode } from '@/node/bar-progression'
-import { ReleaseInfoLabels } from './node/release-info-labels'
+import { ReleaseInfoLabels } from '@/node/release-info-labels'
 
 // Nodes
 const releaseInfoLabelsNodes = ReleaseInfoLabels()
 const ratingNode = RatingTextNode()
 const ratingNodeParent = ratingNode?.parentNode?.parentNode
-const barWrapperNode = BarWrapperNode()
-const barProgressionNode = BarProgressionNode()
+const barContainerNode = BarContainerNode()
 const barMaskNode = BarMaskNode()
 
 const ratingText = ratingNode.textContent?.trim()
@@ -20,12 +18,11 @@ const releaseRatingPercentage = ((releaseRating * 100) / 5).toFixed(2)
 
 // Do the magic
 releaseInfoLabelsNodes.forEach((node) => (node.style.verticalAlign = 'top'))
-ratingNodeParent?.appendChild(barWrapperNode)
-barWrapperNode?.appendChild(barProgressionNode)
-barWrapperNode?.appendChild(barMaskNode)
+ratingNodeParent?.appendChild(barContainerNode)
+barContainerNode?.appendChild(barMaskNode)
 
-barProgressionNode.style.width = `${releaseRatingPercentage}%`
-barProgressionNode.title = `${releaseRating} / 5 (${releaseRatingPercentage}%)`
-// barMaskNode.style.width = `${100 - parseFloat(releaseRatingPercentage)}%`
+barMaskNode.style.width = `${releaseRatingPercentage}%`
+barMaskNode.style.width = `${100 - parseFloat(releaseRatingPercentage)}%`
+barContainerNode.title = `${releaseRating} / 5 (${releaseRatingPercentage}%)`
 
 console.log(ratingText, releaseRatingPercentage)
