@@ -1,6 +1,6 @@
 import { build } from 'bun'
 import { watch, writeFileSync } from 'fs'
-import { banner } from './src/banner.ts'
+import { banner } from './src/constant/banner'
 
 const bundle = async () => {
   console.log('📦 Bundling the userscript...')

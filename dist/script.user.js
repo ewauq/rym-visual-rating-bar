@@ -13,15 +13,7 @@
 
 
 (() => {
-  // src/node/rating-text.ts
-  var RatingTextNode = () => {
-    const node = document.querySelector("span.avg_rating");
-    if (!node)
-      throw new Error("Rating node not found");
-    return node;
-  };
-
-  // src/node/bar-container.ts
+  // src/builder/bar-container.ts
   var BarContainerNode = () => {
     const node = document.createElement("div");
     node.setAttribute("userscript-node", "true");
@@ -40,7 +32,7 @@
     return node;
   };
 
-  // src/node/bar-mask.ts
+  // src/builder/bar-mask.ts
   var BarMaskNode = () => {
     const node = document.createElement("div");
     node.id = "userscript-bar-mask";
@@ -48,16 +40,31 @@
     return node;
   };
 
-  // src/node/release-info-labels.ts
-  var ReleaseInfoLabels = () => {
+  // src/selector/rating-text.ts
+  var RatingTextNode = () => {
+    const node = document.querySelector("span.avg_rating");
+    if (!node)
+      throw new Error("Rating node not found");
+    return node;
+  };
+
+  // src/selector/release-info-labels.ts
+  var ReleaseInfoLabelsNode = () => {
     const nodes = document.querySelectorAll(".info_hdr");
     if (!nodes.length)
       throw new Error("Release info labels not found");
     return nodes;
   };
 
+  // src/selector/release-info-labels-ad.ts
+  var ReleaseInfoLabelsAdNode = () => {
+    const node = document.querySelector(".album_info_outer > tbody > tr > td:nth-of-type(2)");
+    return node;
+  };
+
   // src/main.ts
-  var releaseInfoLabelsNodes = ReleaseInfoLabels();
+  var releaseInfoLabelsNodes = ReleaseInfoLabelsNode();
+  var releaseInfoLabelsAdNode = ReleaseInfoLabelsAdNode();
   var ratingNode = RatingTextNode();
   var ratingNodeParent = ratingNode?.parentNode?.parentNode;
   var barContainerNode = BarContainerNode();
@@ -68,6 +75,7 @@
   var releaseRating = parseFloat(ratingText);
   var releaseRatingPercentage = (releaseRating * 100 / 5).toFixed(2);
   releaseInfoLabelsNodes.forEach((node) => node.style.verticalAlign = "top");
+  releaseInfoLabelsAdNode?.remove();
   ratingNodeParent?.appendChild(barContainerNode);
   barContainerNode?.appendChild(barMaskNode);
   barMaskNode.style.width = `${releaseRatingPercentage}%`;

@@ -1,10 +1,12 @@
-import { RatingTextNode } from '@/node/rating-text'
-import { BarContainerNode } from '@/node/bar-container'
-import { BarMaskNode } from '@/node/bar-mask'
-import { ReleaseInfoLabels } from '@/node/release-info-labels'
+import { BarContainerNode } from '@builder/bar-container'
+import { BarMaskNode } from '@builder/bar-mask'
+import { RatingTextNode } from '@selector/rating-text'
+import { ReleaseInfoLabelsNode } from '@selector/release-info-labels'
+import { ReleaseInfoLabelsAdNode } from '@selector/release-info-labels-ad'
 
 // Nodes
-const releaseInfoLabelsNodes = ReleaseInfoLabels()
+const releaseInfoLabelsNodes = ReleaseInfoLabelsNode()
+const releaseInfoLabelsAdNode = ReleaseInfoLabelsAdNode()
 const ratingNode = RatingTextNode()
 const ratingNodeParent = ratingNode?.parentNode?.parentNode
 const barContainerNode = BarContainerNode()
@@ -18,6 +20,8 @@ const releaseRatingPercentage = ((releaseRating * 100) / 5).toFixed(2)
 
 // Do the magic
 releaseInfoLabelsNodes.forEach((node) => (node.style.verticalAlign = 'top'))
+releaseInfoLabelsAdNode?.remove() // remove the ad node on the release info block
+
 ratingNodeParent?.appendChild(barContainerNode)
 barContainerNode?.appendChild(barMaskNode)
 
