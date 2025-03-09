@@ -121,13 +121,12 @@
   if (!ratingText)
     throw new Error("Rating text not found");
   var releaseRating = parseFloat(ratingText);
-  var releaseRatingPercentage = (releaseRating * 100 / 5).toFixed(2);
+  var releaseRatingPercentage = releaseRating * 100 / 5;
   releaseInfoLabelsNodes.forEach((node) => node.style.verticalAlign = "top");
   releaseInfoLabelsAdNode?.remove();
   ratingNodeParent?.appendChild(barContainerNode);
   barContainerNode?.appendChild(barMaskNode);
-  barMaskNode.style.width = `${releaseRatingPercentage}%`;
-  barMaskNode.style.width = `${100 - parseFloat(releaseRatingPercentage)}%`;
-  barContainerNode.title = `${releaseRating} / 5 (${releaseRatingPercentage}%)`;
+  barMaskNode.style.width = `${100 - releaseRatingPercentage}%`;
+  barContainerNode.title = `${releaseRating}/5 (${releaseRatingPercentage.toFixed(2)}%)`;
   barContainerNode.style.background = generateLinearGradientValue(themes.default10, "gradual");
 })();

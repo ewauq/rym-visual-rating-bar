@@ -28,6 +28,7 @@
     "paths": {
       "@builder/*": ["builder/*"],
       "@constant/*": ["constant/*"],
+      "@helper/*": ["helper/*"],
       "@selector/*": ["selector/*"]
     }
   },
