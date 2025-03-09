@@ -1,8 +1,10 @@
 import { BarContainerNode } from '@builder/bar-container'
 import { BarMaskNode } from '@builder/bar-mask'
+import { themes } from '@constant/theme'
 import { RatingTextNode } from '@selector/rating-text'
 import { ReleaseInfoLabelsNode } from '@selector/release-info-labels'
 import { ReleaseInfoLabelsAdNode } from '@selector/release-info-labels-ad'
+import { generateLinearGradientValue } from 'helper/generate-gradient'
 
 // Nodes
 const releaseInfoLabelsNodes = ReleaseInfoLabelsNode()
@@ -28,5 +30,4 @@ barContainerNode?.appendChild(barMaskNode)
 barMaskNode.style.width = `${releaseRatingPercentage}%`
 barMaskNode.style.width = `${100 - parseFloat(releaseRatingPercentage)}%`
 barContainerNode.title = `${releaseRating} / 5 (${releaseRatingPercentage}%)`
-
-console.log(ratingText, releaseRatingPercentage)
+barContainerNode.style.background = generateLinearGradientValue(themes.default10, 'gradual')

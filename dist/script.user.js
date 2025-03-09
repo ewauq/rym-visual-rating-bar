@@ -18,17 +18,15 @@
     const node = document.createElement("div");
     node.setAttribute("userscript-node", "true");
     node.id = "userscript-bar-container";
-    node.style.display = "flex";
-    node.style.justifyContent = "right";
+    node.style.borderRadius = "25px";
     node.style.boxSizing = "border-box";
-    node.style.height = "30px";
-    node.style.width = "100%";
-    node.style.marginTop = "10px";
-    node.style.borderRadius = "5px";
-    node.style.border = "1px solid #dbdbdb";
-    node.style.background = "linear-gradient(to right,rgb(255, 0, 0) 0%,rgb(0, 189, 16) 100%)";
-    node.style.overflow = "hidden";
+    node.style.display = "flex";
     node.style.fontSize = "0";
+    node.style.height = "30px";
+    node.style.justifyContent = "right";
+    node.style.marginTop = "10px";
+    node.style.overflow = "hidden";
+    node.style.width = "100%";
     return node;
   };
 
@@ -36,8 +34,25 @@
   var BarMaskNode = () => {
     const node = document.createElement("div");
     node.id = "userscript-bar-mask";
-    node.style.backgroundColor = "white";
+    node.style.backgroundColor = "#f2f2f2";
     return node;
+  };
+
+  // src/constant/theme.ts
+  var themes = {
+    default5: ["#dc231c", "#fd7902", "#fdd514", "#62bd21", "#018ea6"],
+    default10: [
+      "#dc231c",
+      "#f03c03",
+      "#fd7902",
+      "#fda506",
+      "#fdd514",
+      "#62bd21",
+      "#0b9e53",
+      "#018ea6",
+      "#015ca1",
+      "#163993"
+    ]
   };
 
   // src/selector/rating-text.ts
@@ -62,6 +77,39 @@
     return node;
   };
 
+  // src/helper/generate-gradient.ts
+  var generateLinearGradientValue = (colors, style) => {
+    if (!Array.isArray(colors)) {
+      return `linear-gradient(to right, ${colors} 0%, transparent 98%)`;
+    }
+    const stepPercentage = 100 / colors.length;
+    let currentStepPercentage = 0;
+    const gradientColors = colors.map((color) => {
+      let cssValue = "";
+      let nextStepPercentage = currentStepPercentage + stepPercentage;
+      if (currentStepPercentage >= 100)
+        currentStepPercentage = 98;
+      if (nextStepPercentage >= 100)
+        nextStepPercentage = 98;
+      switch (style) {
+        case "blend":
+          cssValue = `${color} ${currentStepPercentage}%`;
+          break;
+        case "gradual":
+          cssValue = `${color} ${currentStepPercentage}%, ${color} ${nextStepPercentage}%`;
+          break;
+        default:
+          cssValue = `${color} ${currentStepPercentage}%`;
+          break;
+      }
+      currentStepPercentage = nextStepPercentage;
+      return cssValue;
+    });
+    gradientColors.push("transparent 98%");
+    console.log(gradientColors);
+    return `linear-gradient(to right, ${gradientColors.join(", ")})`;
+  };
+
   // src/main.ts
   var releaseInfoLabelsNodes = ReleaseInfoLabelsNode();
   var releaseInfoLabelsAdNode = ReleaseInfoLabelsAdNode();
@@ -81,5 +129,5 @@
   barMaskNode.style.width = `${releaseRatingPercentage}%`;
   barMaskNode.style.width = `${100 - parseFloat(releaseRatingPercentage)}%`;
   barContainerNode.title = `${releaseRating} / 5 (${releaseRatingPercentage}%)`;
-  console.log(ratingText, releaseRatingPercentage);
+  barContainerNode.style.background = generateLinearGradientValue(themes.default10, "gradual");
 })();
