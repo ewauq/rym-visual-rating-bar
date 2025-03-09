@@ -10,6 +10,7 @@ export const SettingsContainerNode = () => {
   node.style.backgroundColor = '#fbfbfb'
   node.style.border = '1px solid #dddddd'
   node.style.borderRadius = '5px'
+  node.style.display = 'none'
 
   return node
 }

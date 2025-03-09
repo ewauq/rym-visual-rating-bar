@@ -52,6 +52,6 @@ const visibilityCheckInterval = window.setInterval(function () {
   }
 }, 100)
 
-settingsButtonNode.onclick = () => {
-  alert('Settings button clicked')
-}
+settingsButtonNode.onclick = () =>
+  (settingsContainerNode.style.display =
+    settingsContainerNode.style.display === 'none' ? 'flex' : 'none')
