@@ -1,6 +1,6 @@
 import type { ThemeStyleValue } from '@constant/theme'
 
-type GradientStyle = 'blend' | 'gradual'
+type GradientStyle = 'gradient' | 'block'
 
 /**
  * Generate a vertical `linear-gradient` value from the specified colors.
@@ -32,10 +32,10 @@ export const generateLinearGradientValue = (
     if (nextStepPercentage >= 100) nextStepPercentage = 98
 
     switch (style) {
-      case 'blend':
+      case 'gradient':
         cssValue = `${color} ${currentStepPercentage}%`
         break
-      case 'gradual':
+      case 'block':
         cssValue = `${color} ${currentStepPercentage}%, ${color} ${nextStepPercentage}%`
         break
       default:
@@ -49,8 +49,6 @@ export const generateLinearGradientValue = (
 
   // Add the transparent color stop to prevent background color bleed
   gradientColors.push('transparent 98%')
-
-  console.log(gradientColors)
 
   return `linear-gradient(to right, ${gradientColors.join(', ')})`
 }

@@ -13,47 +13,89 @@
 
 
 (() => {
-  // src/builder/bar-container.ts
+  // src/builder/bar/bar-container.ts
   var BarContainerNode = () => {
     const node = document.createElement("div");
-    node.setAttribute("userscript-node", "true");
     node.id = "userscript-bar-container";
-    node.style.borderRadius = "6px";
+    node.style.borderRadius = "5px";
     node.style.boxShadow = "rgba(0, 0, 0, 0.4) 0px 0px 4px 0px inset";
     node.style.boxSizing = "border-box";
     node.style.display = "flex";
     node.style.fontSize = "0";
     node.style.height = "16px";
     node.style.justifyContent = "right";
-    node.style.marginTop = "10px";
     node.style.overflow = "hidden";
     node.style.width = "100%";
     return node;
   };
 
-  // src/builder/bar-mask.ts
+  // src/builder/bar/bar-mask.ts
   var BarMaskNode = () => {
     const node = document.createElement("div");
     node.id = "userscript-bar-mask";
     node.style.backgroundColor = "#f2f2f2";
-    node.style.transition = "width 400ms cubic-bezier(.02, 1.3, 1, 1.1)";
+    node.style.transition = "width 400ms cubic-bezier(.25, 1, 0.5, 1)";
+    return node;
+  };
+
+  // src/builder/bar/bar-wrapper.ts
+  var BarWrapperNode = () => {
+    const node = document.createElement("div");
+    node.setAttribute("userscript-node", "true");
+    node.id = "userscript-bar-wrapper";
+    node.style.display = "flex";
+    node.style.gap = "10px";
+    node.style.marginTop = "10px";
+    node.style.width = "100%";
+    return node;
+  };
+
+  // src/builder/settings/settings-button.ts
+  var SettingsButtonNode = () => {
+    const node = document.createElement("button");
+    node.id = "userscript-settings-button";
+    node.style.backgroundColor = "blue";
+    node.style.border = "0";
+    node.style.cursor = "pointer";
+    node.style.fontSize = "16px";
+    node.style.height = "16px";
+    node.style.margin = "0";
+    node.style.width = "16px";
+    node.style.background = "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAApUlEQVR4nK2T4Q3CIBCFvwH8JT+pe3SM7qHdzugA3QDH6BAYzCMhVyW0+BIS4N49HscBv+GAqHGmASfAF+uxEEjzDC/uJnkBVmACZiAUAkF7kziLFfEKxMaxGrcfTDsEEneDeYfAzVZ7BF6GdJfNAXiYWFCOo3JKSsy4VHh0CzjZKZ8tyvag5GftCt1F/Msz+t5Gsq2cLNpWvtZaOYsc/kzf0PSd3/xGibT0C78vAAAAAElFTkSuQmCC) no-repeat";
+    node.style.backgroundSize = "contain";
+    node.style.opacity = "0.2";
+    return node;
+  };
+
+  // src/builder/settings/settings-container.ts
+  var SettingsContainerNode = () => {
+    const node = document.createElement("div");
+    node.setAttribute("userscript-node", "true");
+    node.id = "userscript-settings-container";
+    node.style.padding = "10px";
+    node.style.border = "1px solid red";
+    node.style.marginTop = "10px";
+    node.style.width = "100%";
+    node.style.backgroundColor = "#fbfbfb";
+    node.style.border = "1px solid #dddddd";
+    node.style.borderRadius = "5px";
     return node;
   };
 
   // src/constant/theme.ts
   var themes = {
-    default5: ["#dc231c", "#fd7902", "#fdd514", "#62bd21", "#018ea6"],
+    default5: ["#ea4335", "#f27f1d", "#fbbc04", "#98b22b", "#34a853"],
     default10: [
-      "#dc231c",
-      "#f03c03",
-      "#fd7902",
-      "#fda506",
-      "#fdd514",
-      "#62bd21",
-      "#0b9e53",
-      "#018ea6",
-      "#015ca1",
-      "#163993"
+      "#ea4335",
+      "#ee6129",
+      "#f27f1d",
+      "#f69d11",
+      "#fbbc04",
+      "#cab717",
+      "#98b22b",
+      "#66ad3f",
+      "#34a853",
+      "#34a853"
     ]
   };
 
@@ -72,10 +114,10 @@
       if (nextStepPercentage >= 100)
         nextStepPercentage = 98;
       switch (style) {
-        case "blend":
+        case "gradient":
           cssValue = `${color} ${currentStepPercentage}%`;
           break;
-        case "gradual":
+        case "block":
           cssValue = `${color} ${currentStepPercentage}%, ${color} ${nextStepPercentage}%`;
           break;
         default:
@@ -86,7 +128,6 @@
       return cssValue;
     });
     gradientColors.push("transparent 98%");
-    console.log(gradientColors);
     return `linear-gradient(to right, ${gradientColors.join(", ")})`;
   };
 
@@ -118,8 +159,11 @@
   var releaseInfoLabelsAdNode = ReleaseInfoLabelsAdNode();
   var ratingNode = RatingTextNode();
   var ratingNodeParent = ratingNode?.parentNode?.parentNode;
+  var barWrapperNode = BarWrapperNode();
   var barContainerNode = BarContainerNode();
   var barMaskNode = BarMaskNode();
+  var settingsButtonNode = SettingsButtonNode();
+  var settingsContainerNode = SettingsContainerNode();
   var ratingText = ratingNode.textContent?.trim();
   if (!ratingText)
     throw new Error("Rating text not found");
@@ -127,15 +171,21 @@
   var releaseRatingPercentage = releaseRating * 100 / 5;
   releaseInfoLabelsNodes.forEach((node) => node.style.verticalAlign = "top");
   releaseInfoLabelsAdNode?.remove();
-  ratingNodeParent?.appendChild(barContainerNode);
-  barContainerNode?.appendChild(barMaskNode);
-  barMaskNode.style.width = ANIMATION ? `90%` : `${100 - releaseRatingPercentage}%`;
+  barContainerNode.appendChild(barMaskNode);
+  barWrapperNode.appendChild(barContainerNode);
+  barWrapperNode.appendChild(settingsButtonNode);
+  ratingNodeParent?.appendChild(barWrapperNode);
+  barWrapperNode.after(settingsContainerNode);
+  barMaskNode.style.width = ANIMATION ? `100%` : `${100 - releaseRatingPercentage}%`;
   barContainerNode.title = `${releaseRating}/5 (${releaseRatingPercentage.toFixed(2)}%)`;
-  barContainerNode.style.background = generateLinearGradientValue(themes.default10, "gradual");
+  barContainerNode.style.background = generateLinearGradientValue(themes.default10, "block");
   var visibilityCheckInterval = window.setInterval(function() {
     if (barContainerNode) {
       barMaskNode.style.width = `${100 - releaseRatingPercentage}%`;
       window.clearInterval(visibilityCheckInterval);
     }
-  }, 50);
+  }, 100);
+  settingsButtonNode.onclick = () => {
+    alert("Settings button clicked");
+  };
 })();
