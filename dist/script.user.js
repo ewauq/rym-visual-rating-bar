@@ -18,11 +18,12 @@
     const node = document.createElement("div");
     node.setAttribute("userscript-node", "true");
     node.id = "userscript-bar-container";
-    node.style.borderRadius = "25px";
+    node.style.borderRadius = "6px";
+    node.style.boxShadow = "rgba(0, 0, 0, 0.4) 0px 0px 4px 0px inset";
     node.style.boxSizing = "border-box";
     node.style.display = "flex";
     node.style.fontSize = "0";
-    node.style.height = "30px";
+    node.style.height = "16px";
     node.style.justifyContent = "right";
     node.style.marginTop = "10px";
     node.style.overflow = "hidden";
@@ -35,6 +36,7 @@
     const node = document.createElement("div");
     node.id = "userscript-bar-mask";
     node.style.backgroundColor = "#f2f2f2";
+    node.style.transition = "width 400ms cubic-bezier(.02, 1.3, 1, 1.1)";
     return node;
   };
 
@@ -53,28 +55,6 @@
       "#015ca1",
       "#163993"
     ]
-  };
-
-  // src/selector/rating-text.ts
-  var RatingTextNode = () => {
-    const node = document.querySelector("span.avg_rating");
-    if (!node)
-      throw new Error("Rating node not found");
-    return node;
-  };
-
-  // src/selector/release-info-labels.ts
-  var ReleaseInfoLabelsNode = () => {
-    const nodes = document.querySelectorAll(".info_hdr");
-    if (!nodes.length)
-      throw new Error("Release info labels not found");
-    return nodes;
-  };
-
-  // src/selector/release-info-labels-ad.ts
-  var ReleaseInfoLabelsAdNode = () => {
-    const node = document.querySelector(".album_info_outer > tbody > tr > td:nth-of-type(2)");
-    return node;
   };
 
   // src/helper/generate-gradient.ts
@@ -110,7 +90,30 @@
     return `linear-gradient(to right, ${gradientColors.join(", ")})`;
   };
 
+  // src/selector/rating-text.ts
+  var RatingTextNode = () => {
+    const node = document.querySelector("span.avg_rating");
+    if (!node)
+      throw new Error("Rating node not found");
+    return node;
+  };
+
+  // src/selector/release-info-labels.ts
+  var ReleaseInfoLabelsNode = () => {
+    const nodes = document.querySelectorAll(".info_hdr");
+    if (!nodes.length)
+      throw new Error("Release info labels not found");
+    return nodes;
+  };
+
+  // src/selector/release-info-labels-ad.ts
+  var ReleaseInfoLabelsAdNode = () => {
+    const node = document.querySelector(".album_info_outer > tbody > tr > td:nth-of-type(2)");
+    return node;
+  };
+
   // src/main.ts
+  var ANIMATION = true;
   var releaseInfoLabelsNodes = ReleaseInfoLabelsNode();
   var releaseInfoLabelsAdNode = ReleaseInfoLabelsAdNode();
   var ratingNode = RatingTextNode();
@@ -126,7 +129,13 @@
   releaseInfoLabelsAdNode?.remove();
   ratingNodeParent?.appendChild(barContainerNode);
   barContainerNode?.appendChild(barMaskNode);
-  barMaskNode.style.width = `${100 - releaseRatingPercentage}%`;
+  barMaskNode.style.width = ANIMATION ? `90%` : `${100 - releaseRatingPercentage}%`;
   barContainerNode.title = `${releaseRating}/5 (${releaseRatingPercentage.toFixed(2)}%)`;
   barContainerNode.style.background = generateLinearGradientValue(themes.default10, "gradual");
+  var visibilityCheckInterval = window.setInterval(function() {
+    if (barContainerNode) {
+      barMaskNode.style.width = `${100 - releaseRatingPercentage}%`;
+      window.clearInterval(visibilityCheckInterval);
+    }
+  }, 50);
 })();
