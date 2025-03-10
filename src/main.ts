@@ -1,57 +1,17 @@
-import { BarContainerNode } from '@builder/bar/bar-container'
-import { BarMaskNode } from '@builder/bar/bar-mask'
-import { BarWrapperNode } from '@builder/bar/bar-wrapper'
-import { SettingsButtonNode } from '@builder/settings/settings-button'
-import { SettingsContainerNode } from '@builder/settings/settings-container'
-import { themes } from '@constant/theme'
-import { generateLinearGradientValue } from '@helper/generate-gradient'
-import { RatingTextNode } from '@selector/rating-text'
-import { ReleaseInfoLabelsNode } from '@selector/release-info-labels'
-import { ReleaseInfoLabelsAdNode } from '@selector/release-info-labels-ad'
+import { NodeCreator } from '@dom/node-creator'
+import { NodeSelector } from '@dom/node-selector'
+import { SettingsPanelBuilder } from '@dom/settings-panel-builder'
+import { BarBuilder } from 'dom/bar-builder'
 
-const ANIMATION = true
+console.log('🔄 Loading the userscript...')
 
-// Nodes
-const releaseInfoLabelsNodes = ReleaseInfoLabelsNode()
-const releaseInfoLabelsAdNode = ReleaseInfoLabelsAdNode()
-const ratingNode = RatingTextNode()
-const ratingNodeParent = ratingNode?.parentNode?.parentNode
+const nodeSelector = new NodeSelector()
+const nodeCreator = new NodeCreator(nodeSelector)
 
-const barWrapperNode = BarWrapperNode()
-const barContainerNode = BarContainerNode()
-const barMaskNode = BarMaskNode()
-const settingsButtonNode = SettingsButtonNode()
-const settingsContainerNode = SettingsContainerNode()
+const barBuilder = new BarBuilder(nodeSelector, nodeCreator)
+const settingsPanelBuilder = new SettingsPanelBuilder(nodeSelector, nodeCreator)
 
-const ratingText = ratingNode.textContent?.trim()
-if (!ratingText) throw new Error('Rating text not found')
+barBuilder.build()
+settingsPanelBuilder.build()
 
-const releaseRating = parseFloat(ratingText)
-const releaseRatingPercentage = (releaseRating * 100) / 5
-
-// Do the magic
-releaseInfoLabelsNodes.forEach((node) => (node.style.verticalAlign = 'top'))
-releaseInfoLabelsAdNode?.remove() // remove the ad node on the release info block
-
-barContainerNode.appendChild(barMaskNode)
-barWrapperNode.appendChild(barContainerNode)
-barWrapperNode.appendChild(settingsButtonNode)
-ratingNodeParent?.appendChild(barWrapperNode)
-
-// Settings Panel
-barWrapperNode.after(settingsContainerNode)
-
-barMaskNode.style.width = ANIMATION ? `100%` : `${100 - releaseRatingPercentage}%`
-barContainerNode.title = `${releaseRating}/5 (${releaseRatingPercentage.toFixed(2)}%)`
-barContainerNode.style.background = generateLinearGradientValue(themes.default10, 'block')
-
-const visibilityCheckInterval = window.setInterval(function () {
-  if (barContainerNode) {
-    barMaskNode.style.width = `${100 - releaseRatingPercentage}%`
-    window.clearInterval(visibilityCheckInterval)
-  }
-}, 100)
-
-settingsButtonNode.onclick = () =>
-  (settingsContainerNode.style.display =
-    settingsContainerNode.style.display === 'none' ? 'flex' : 'none')
+console.log('✅ Userscript loaded!')

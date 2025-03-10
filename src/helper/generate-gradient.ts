@@ -13,10 +13,7 @@ type GradientStyle = 'gradient' | 'block'
  * @param style [GradientStyle] - The style of the gradient ('blend' or 'gradual').
  * @returns [string] - The generated gradient.
  */
-export const generateLinearGradientValue = (
-  colors: ThemeStyleValue,
-  style: GradientStyle,
-): string => {
+export const generateGradientValues = (colors: ThemeStyleValue, style: GradientStyle): string => {
   if (!Array.isArray(colors)) {
     return `linear-gradient(to right, ${colors} 0%, transparent 98%)`
   }

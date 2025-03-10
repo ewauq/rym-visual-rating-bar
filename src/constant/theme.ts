@@ -6,8 +6,7 @@ export type ThemeStyleValue = RGBColor | HEXColor | RGBColor[] | HEXColor[]
 
 type Theme = { [key in ThemeName]: ThemeStyleValue }
 
-// To match with the rating step, the theme should have 5 colors or 10.
-export const themes: Theme = {
+export const theme: Theme = {
   default5: ['#ea4335', '#f27f1d', '#fbbc04', '#98b22b', '#34a853'],
   default10: [
     '#ea4335',

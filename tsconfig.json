@@ -26,10 +26,9 @@
     "baseUrl": "src",
     "rootDir": "src",
     "paths": {
-      "@builder/*": ["builder/*"],
       "@constant/*": ["constant/*"],
-      "@helper/*": ["helper/*"],
-      "@selector/*": ["selector/*"]
+      "@dom/*": ["dom/*"],
+      "@helper/*": ["helper/*"]
     }
   },
   "include": ["src"]
