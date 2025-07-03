@@ -1,32 +1,32 @@
 import { theme } from '@constant/theme'
-import { NodeCreator } from '@dom/node-creator'
-import { NodeSelector } from '@dom/node-selector'
+import { dom } from '@dom/node-selector'
 import { generateGradientValues } from '@helper/generate-gradient'
 import { getReleaseRating } from '@helper/get-release-rating'
+import { barContainer } from 'node/bar-container'
+import { barMask } from 'node/bar-mask'
+import { barWrapper } from 'node/bar-wrapper'
 
 const ANIMATION = true
 
 export class BarBuilder {
-  private nodeSelector: NodeSelector
-  private nodeCreator: NodeCreator
-
-  constructor(nodeSelector: NodeSelector, nodeCreator: NodeCreator) {
-    this.nodeSelector = nodeSelector
-    this.nodeCreator = nodeCreator
-  }
-
   public build(): void {
     //Style adjustments
-    this.nodeSelector.getReleaseInfoLabelsNodes().forEach((node) => {
-      node.style.verticalAlign = 'top'
-    })
-    this.nodeSelector.getReleaseInfoLabelsAdNode()?.remove() // TODO: Add a setting to enable/disable this
+    dom
+      .getNodes<HTMLTableCellElement>('.info_hdr')
+      .forEach((node) => (node.style.verticalAlign = 'top'))
 
-    const ratingNode = this.nodeSelector.getRatingNode()
-    const barWrapperNode = this.nodeCreator.createBarWrapperNode()
+    // TODO: Add a setting to enable/disable this
+    try {
+      dom
+        .getNode<HTMLTableCellElement>('.album_info_outer > tbody > tr > td:nth-of-type(2)')
+        .remove()
+    } catch (e) {}
+
+    const ratingNode = dom.getNode<HTMLSpanElement>('.avg_rating')
     const ratingParentNode = ratingNode.parentNode?.parentNode
-    const barContainerNode = this.nodeCreator.createBarContainerNode()
-    const barMaskNode = this.nodeCreator.createBarMaskNode()
+    const barWrapperNode = dom.createNode<HTMLDivElement>(barWrapper)
+    const barContainerNode = dom.createNode<HTMLDivElement>(barContainer)
+    const barMaskNode = dom.createNode<HTMLDivElement>(barMask)
 
     barContainerNode.appendChild(barMaskNode)
     barWrapperNode.appendChild(barContainerNode)

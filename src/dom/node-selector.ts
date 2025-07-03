@@ -1,31 +1,38 @@
-export class NodeSelector {
-  public getRatingNode(): HTMLSpanElement {
-    const node = document.querySelector<HTMLSpanElement>('.avg_rating')
-    if (!node) throw new Error('Rating node not found')
-    return node
-  }
+import type { NodeDefinition } from 'type/node-definition'
 
-  public getReleaseInfoLabelsNodes(): NodeListOf<HTMLTableCellElement> {
-    const nodes = document.querySelectorAll<HTMLTableCellElement>('.info_hdr')
-    if (!nodes.length) throw new Error('Release info labels not found')
+export const dom = {
+  getNodes<T extends HTMLElement = never>(selector: string): NodeListOf<T> {
+    const nodes = document.querySelectorAll<T>(selector)
+    if (!nodes.length) throw new Error(`Node '${selector}' not found`)
     return nodes
-  }
+  },
 
-  public getReleaseInfoLabelsAdNode(): HTMLTableCellElement | null {
-    return document.querySelector<HTMLTableCellElement>(
-      '.album_info_outer > tbody > tr > td:nth-of-type(2)',
-    )
-  }
-
-  public getBarWrapperNode(): HTMLDivElement {
-    const node = document.querySelector<HTMLDivElement>('#userscript-bar-wrapper')
-    if (!node) throw new Error('Bar wrapper node not found')
+  getNode<T extends HTMLElement = never>(selector: string): T {
+    const node = document.querySelector<T>(selector)
+    if (!node) throw new Error(`Node '${selector}' not found`)
     return node
-  }
+  },
+  // TODO : à bouger dans un autre fichier
+  createNode<T extends HTMLElement = never>(nodeDefinition: NodeDefinition): T {
+    const node = document.createElement(nodeDefinition.tag) as T
+    node.id = nodeDefinition.id
 
-  public getSettingsPanelContainerNode(): HTMLDivElement {
-    const node = document.querySelector<HTMLDivElement>('#userscript-settings-panel-container')
-    if (!node) throw new Error('Settings panel container node not found')
+    // Styles
+    if (nodeDefinition.style) Object.assign(node.style, nodeDefinition.style)
+
+    // Attributes
+    if (nodeDefinition.removeOnHotReload) node.setAttribute('userscript-node', 'true')
+    if (nodeDefinition.title) node.setAttribute('title', nodeDefinition.title)
+    if (nodeDefinition.htmlFor) node.setAttribute('for', nodeDefinition.htmlFor)
+
+    // Values
+    if (nodeDefinition.textContent) node.textContent = nodeDefinition.textContent
+
+    // Events
+    if (nodeDefinition.onMouseOver) node.onmouseover = () => nodeDefinition.onMouseOver!(node)
+    if (nodeDefinition.onMouseOut) node.onmouseout = () => nodeDefinition.onMouseOut!(node)
+    if (nodeDefinition.onClick) node.onclick = () => nodeDefinition.onClick!(node)
+
     return node
-  }
+  },
 }

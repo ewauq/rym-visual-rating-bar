@@ -28,7 +28,8 @@
     "paths": {
       "@constant/*": ["constant/*"],
       "@dom/*": ["dom/*"],
-      "@helper/*": ["helper/*"]
+      "@helper/*": ["helper/*"],
+      "@type/*": ["type/*"]
     }
   },
   "include": ["src"]
